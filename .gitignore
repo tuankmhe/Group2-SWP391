@@ -16,7 +16,6 @@
 # limitations under the License.
 # -----------------------------------------------------------------------------
 logs
-nbproject
 output
 # Next line commented out, because test/webapp-virtual-library and
 # test/webapp-virtual-webapp use it:
