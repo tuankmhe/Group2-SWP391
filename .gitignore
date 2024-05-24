@@ -13,3 +13,5 @@ Group2_SE1804_SWP291_ClothesShop/nbproject/project.xml
 Group2_SE1804_SWP291_ClothesShop/nbproject/project.properties
 Group2_SE1804_SWP291_ClothesShop/nbproject/private/private.properties
 Group2_SE1804_SWP291_ClothesShop/nbproject/genfiles.properties
+*.xml
+*.properties
