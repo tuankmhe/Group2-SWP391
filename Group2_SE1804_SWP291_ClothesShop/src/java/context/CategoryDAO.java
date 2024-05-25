@@ -48,51 +48,70 @@ public class CategoryDAO extends DBContext {
         return listCate;
     }
 
-//    public void deleteCate(int cid) {
-//        String sql = "delete from category where cid=?";
-//        try {
-//            PreparedStatement stm = connection.prepareStatement(sql);
-//
-//            stm.setInt(1, cid);
-//            stm.executeUpdate();
-//            System.out.println("delete sucsessfull");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void addCategory(String name) {
+        String sql = "insert into category values (?)";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, name);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
 
-    public void updateCate(Category c){
+    public void deleteCate(int cid) {
+        String sql = "delete from product\n"
+                + "where cid=?\n"
+                + "\n"
+                + "delete from category\n"
+                + "where cid=?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setInt(1, cid);
+            stm.setInt(2, cid);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateCate(Category c) {
         String sql = "Update category set name = ? where cid =? ";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, c.getName());
             stm.setInt(2, c.getCid());
-            stm.executeQuery();
-        } catch (SQLException e){
+            stm.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public Category getCateById(int cid){
+
+    public Category getCateById(int cid) {
         String sql = "select * from category where cid=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cid);
-            
+
             ResultSet rs = st.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return new Category(cid, rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
-    public static void main(String[] args) {
-       
-        CategoryDAO cd = new CategoryDAO();
-        System.out.println(cd.getCateById(2).getName());
-        cd.deleteCate(2);
 
-        
+    public static void main(String[] args) {
+
+        CategoryDAO cd = new CategoryDAO();
+        cd.deleteCate(5);
+        ArrayList<Category> list = cd.getAllCate();
+
+        for (Category category : list) {
+            System.out.println(category.getName());
+        }
+
     }
 }
