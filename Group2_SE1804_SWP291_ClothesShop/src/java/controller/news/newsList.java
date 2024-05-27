@@ -5,12 +5,15 @@
 
 package controller.news;
 
+import context.NewsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import model.News;
 
 /**
  *
@@ -27,19 +30,7 @@ public class newsList extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet newsList</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet newsList at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -53,9 +44,30 @@ public class newsList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String indexPage = request.getParameter("index");
+           NewsDAO dao = new NewsDAO();
+           ArrayList<News> n = new ArrayList<News>();
+           if(indexPage != null){
+             int index = Integer.parseInt(indexPage);
+             n = dao.pagging(index);
+           }
+           else{
+             n = dao.pagging(1);
+           }
+            
+        int count = dao.count();
+        int pages = 0;
+         if(count % 4 != 0){
+            pages = (count/4) +1 ;
+        }
+         else
+              pages = count/4;
+        request.setAttribute("n", n);
+        request.setAttribute("pages", pages);
+        
+        request.getRequestDispatcher("news/newsList.jsp").forward(request, response);
     } 
-
+    
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request

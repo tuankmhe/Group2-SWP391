@@ -15,19 +15,28 @@ public class News {
     String title;
     String body;
     int author;
-    Date update_date;
+    Date updateDate;
     boolean status;
-
+    String authorName;
     public News() {
     }
 
-    public News(int blogId, String title, String body, int author, Date update_date, boolean status) {
+    public News(int blogId, String title, String body, int author, Date update_date, boolean status, String authorName) {
         this.blogId = blogId;
         this.title = title;
         this.body = body;
         this.author = author;
-        this.update_date = update_date;
+        this.updateDate = update_date;
         this.status = status;
+        this.authorName = authorName;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public int getBlogId() {
@@ -62,12 +71,12 @@ public class News {
         this.author = author;
     }
 
-    public Date getUpdate_date() {
-        return update_date;
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
-    public void setUpdate_date(Date update_date) {
-        this.update_date = update_date;
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     public boolean getStatus() {
