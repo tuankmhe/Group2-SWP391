@@ -4,9 +4,17 @@
         <servlet-name>newsList</servlet-name>
         <servlet-class>controller.news.newsList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>newsDetail</servlet-name>
+        <servlet-class>controller.news.newsDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>newsDetail</servlet-name>
+        <url-pattern>/newsDetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
