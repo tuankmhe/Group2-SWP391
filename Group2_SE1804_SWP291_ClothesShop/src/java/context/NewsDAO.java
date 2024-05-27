@@ -17,21 +17,36 @@ public class NewsDAO extends DBContext{
       public ArrayList<News> pagging(int index){
         ArrayList<News> b = new ArrayList<>();
         try {
-            String sql = "select * from `ClothesShop`.`News` order by nid limit 4 offset ?";
+            String sql = "select * from News order by 'nid' OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, (index-1)*4);
             ResultSet rs = stm.executeQuery();     
             while (rs.next()) {                
-                b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5)));
+                b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
         }
         return b;
     }
+      public String getAuthorByid(int id){
+               String author ="";
+        try {
+            String sql = "select * from [User] Where uid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();     
+            
+            if (rs.next()) {                
+               author = rs.getString(2);
+            }
+        } catch (Exception e) {
+        }
+        return author;
+    }
     
     public  int count(){
         try {
-            String sql = "select count (*) from `ClothesShop`.`News`";
+            String sql = "select count (*) from News";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {                
@@ -45,12 +60,12 @@ public class NewsDAO extends DBContext{
     public ArrayList<News> detail(int blog_id){
         ArrayList<News> b = new ArrayList<>();
         try {
-            String sql = "select * from `ClothesShop`.`News` where nid = ? ";
+            String sql = "select * from News where nid = ? ";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, blog_id);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {                
-               b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5)));
+               b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
         }
@@ -60,16 +75,26 @@ public class NewsDAO extends DBContext{
     public ArrayList<News> list(){
         ArrayList<News> b = new ArrayList<>();
         try {
-            String sql = "select * from `ClothesShop`.`News`";
+            String sql = "select * from News";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
-            while (rs.next()) {                
-                b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5)));
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
         }
         return b;
     }
+    /*
+     public static void main(String[] args) {
+        NewsDAO dao = new NewsDAO();
+        ArrayList<News> n = dao.list();
+        System.out.println(n.size());
+         for (int i = 0; i < n.size(); i++) {
+             System.out.println(n.get(i));
+         }}
+    */
+    
     
    
 
