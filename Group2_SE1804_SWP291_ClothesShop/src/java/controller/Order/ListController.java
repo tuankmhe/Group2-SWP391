@@ -33,8 +33,8 @@ public class ListController extends HttpServlet {
             page = "1";
         }
         int pageIndex = Integer.parseInt(page);
-        ArrayList<Order> orders = orderDB.pagging(pageIndex, pageSize);
-        int totalRow = orderDB.count();
+//        ArrayList<Order> orders = orderDB.pagging(pageIndex, pageSize);
+//        int totalRow = orderDB.count();
         int totalPage = (totalRow % pageSize == 0) ? totalRow / pageSize : (totalRow / pageSize) + 1;
 
         req.setAttribute("pageIndex", pageIndex);
