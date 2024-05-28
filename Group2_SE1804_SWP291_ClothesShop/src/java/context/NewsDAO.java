@@ -57,15 +57,15 @@ public class NewsDAO extends DBContext{
         return 0;
     }
     
-    public ArrayList<News> detail(int blog_id){
-        ArrayList<News> b = new ArrayList<>();
+    public News detail(int newsId){
+        News b = new News();
         try {
             String sql = "select * from News where nid = ? ";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, blog_id);
+            stm.setInt(1, newsId);
             ResultSet rs = stm.executeQuery();
-            while (rs.next()) {                
-               b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
+            if (rs.next()) {                
+               b=new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4)));
             }
         } catch (Exception e) {
         }

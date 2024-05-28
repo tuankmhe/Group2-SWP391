@@ -3,22 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.Order;
+package controller.news;
 
+import context.NewsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.News;
 
 /**
  *
- * @author djxjs
+ * @author ADMIN
  */
-@WebServlet(name="updateOrder", urlPatterns={"/updateOrder"})
-public class updateOrder extends HttpServlet {
+public class newsDetail extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class updateOrder extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateOrder</title>");  
+            out.println("<title>Servlet newsDetail</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateOrder at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet newsDetail at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,7 +55,19 @@ public class updateOrder extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+         NewsDAO dao = new NewsDAO();
+         News news = new News();
+        String newsId = request.getParameter("id");
+        if(newsId!= null){
+          
+         news = dao.detail(Integer.parseInt(newsId));
+        
+        }
+        else{
+        news = dao.detail(0);
+        }
+         request.setAttribute("news", news);
+        request.getRequestDispatcher("news/newsDetail.jsp").forward(request, response);
     } 
 
     /** 

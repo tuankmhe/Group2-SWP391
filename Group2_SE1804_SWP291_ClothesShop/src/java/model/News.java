@@ -11,7 +11,7 @@ import java.util.Date;
  * @author ADMIN
  */
 public class News {
-    int blogId;
+    int nId;
     String title;
     String body;
     int author;
@@ -21,8 +21,8 @@ public class News {
     public News() {
     }
 
-    public News(int blogId, String title, String body, int author, Date update_date, boolean status, String authorName) {
-        this.blogId = blogId;
+    public News(int nId, String title, String body, int author, Date update_date, boolean status, String authorName) {
+        this.nId = nId;
         this.title = title;
         this.body = body;
         this.author = author;
@@ -39,12 +39,12 @@ public class News {
         this.authorName = authorName;
     }
 
-    public int getBlogId() {
-        return blogId;
+    public int getnId() {
+        return nId;
     }
 
-    public void setBlogId(int blogId) {
-        this.blogId = blogId;
+    public void setnId(int nId) {
+        this.nId = nId;
     }
 
     public String getTitle() {
