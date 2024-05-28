@@ -8,7 +8,15 @@
         <servlet-name>newsDetail</servlet-name>
         <servlet-class>controller.news.newsDetail</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
+        <servlet-name>AddProductServlet</servlet-name>
+        <servlet-class>controller.product.AddProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddProductServlet</servlet-name>
+        <url-pattern>/addproduct</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>listproduct</servlet-name>
         <servlet-class>controller.product.listproduct</servlet-class>
     </servlet>

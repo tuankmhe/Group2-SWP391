@@ -22,7 +22,13 @@ public class NewsDAO extends DBContext{
             stm.setInt(1, (index-1)*4);
             ResultSet rs = stm.executeQuery();     
             while (rs.next()) {                
-                b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
+                b.add(new News(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4),
+                        rs.getTimestamp(6),
+                        rs.getBoolean(5), 
+                        getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
         }

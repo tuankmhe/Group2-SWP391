@@ -15,17 +15,18 @@ import model.Gender;
 import model.Product;
 
 public class ProductDAO extends DBContext {
-    public ArrayList<Product> pagging(int index){
+
+    public ArrayList<Product> pagging(int index) {
         ArrayList<Product> products = new ArrayList<>();
         try {
             String sql = """
                         SELECT * FROM product
                         ORDER BY pid
                         OFFSET ? ROWS
-                        FETCH NEXT 3 ROWS ONLY;
+                        FETCH NEXT 4 ROWS ONLY;
                         """;
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, (index - 1) * 3);
+            stm.setInt(1, (index - 1) * 4);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 int pid = rs.getInt("pid");
@@ -35,15 +36,15 @@ public class ProductDAO extends DBContext {
                 String describe = rs.getString("describe");
                 String img = rs.getString("img");
                 Date releaseDate = rs.getDate("releaseDate");
-                
+
                 int categoryId = rs.getInt("cid");
                 int brandId = rs.getInt("bid");
                 int genderId = rs.getInt("gid");
-                
+
                 Category category = getCategoryById(categoryId);
                 Brand brand = getBrandById(brandId);
                 Gender gender = getGenderById(genderId);
-                
+
                 String size = rs.getString("size");
 
                 Product product = new Product(pid, name, quantity, price, describe, img, releaseDate, category, brand, gender, size);
@@ -53,6 +54,50 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return products;
+    }
+
+    public int count(String search) {
+        try {
+            String sql = "SELECT COUNT(*) FROM product";
+            if (search != null && !search.trim().isEmpty()) {
+                sql += " WHERE name LIKE ?";
+            }
+            PreparedStatement stm = connection.prepareStatement(sql);
+            if (search != null && !search.trim().isEmpty()) {
+                stm.setString(1, "%" + search + "%");
+            }
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void addProduct(Product product) {
+        try {
+            String sql = """
+            INSERT INTO product (name, quantity, price, describe, img, releaseDate, cid, bid, gid, size) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, product.getName());
+            stm.setInt(2, product.getQuantity());
+            stm.setDouble(3, product.getPrice());
+            stm.setString(4, product.getDescribe());
+            stm.setString(5, product.getImg());
+            stm.setDate(6, new java.sql.Date(product.getReleaseDate().getTime()));
+            stm.setInt(7, product.getCategory().getCid());
+            stm.setInt(8, product.getBrand().getBid());
+            stm.setInt(9, product.getGender().getGid());
+            stm.setString(10, product.getSize());
+
+            stm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to get Category by ID
@@ -71,6 +116,29 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return category;
+    }
+
+    public ArrayList<Product> searchByName(String name, int index) {
+        ArrayList<Product> products = new ArrayList<>();
+        try {
+            String sql = """
+                        SELECT * FROM product
+                        WHERE name LIKE ?
+                        ORDER BY pid
+                        OFFSET ? ROWS
+                        FETCH NEXT 4 ROWS ONLY;
+                        """;
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + name + "%");
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                // Extract product details and add to the list
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 
     // Method to get Brand by ID
@@ -108,6 +176,7 @@ public class ProductDAO extends DBContext {
         }
         return gender;
     }
+
     public static void main(String[] args) {
         // Giả sử bạn muốn kiểm tra trang 1
         int pageIndex = 1;

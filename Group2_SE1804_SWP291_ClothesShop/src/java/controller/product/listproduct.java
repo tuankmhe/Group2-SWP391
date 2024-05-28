@@ -12,26 +12,35 @@ import context.ProductDAO;
 public class listproduct extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    String indexPage = request.getParameter("index");
+    String search = request.getParameter("search");
+    ProductDAO productDAO = new ProductDAO();
+    ArrayList<Product> products;
+    int index = 1;
 
-        // Get the page index from the request, default to 1 if not provided
-        int pageIndex = 1;
-        if (request.getParameter("page") != null) {
-            pageIndex = Integer.parseInt(request.getParameter("page"));
-        }
-
-        // Get the paginated list of products from the DAO
-        ProductDAO productDAO = new ProductDAO();
-        ArrayList<Product> products = productDAO.pagging(pageIndex);
-
-        // Set the products and page index as request attributes
-        request.setAttribute("products", products);
-        request.setAttribute("pageIndex", pageIndex);
-
-        // Forward to the JSP page for rendering
-        request.getRequestDispatcher("product/productList.jsp").forward(request, response);
+    if (indexPage != null) {
+        index = Integer.parseInt(indexPage);
     }
+
+    if (search != null && !search.trim().isEmpty()) {
+        products = productDAO.searchByName(search, index);
+        request.setAttribute("search", search);
+    } else {
+        products = productDAO.pagging(index);
+    }
+
+    int count = productDAO.count(search);
+    int pages = (count % 4 == 0) ? count / 4 : count / 4 + 1;
+
+    request.setAttribute("products", products);
+    request.setAttribute("pageIndex", pages);
+    request.setAttribute("currentPage", index);
+
+    request.getRequestDispatcher("product/productList.jsp").forward(request, response);
+}
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,5 +59,5 @@ public class listproduct extends HttpServlet {
 
         return "Short description";
     }// </editor-fold>
-   
+
 }
