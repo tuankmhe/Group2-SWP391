@@ -8,6 +8,16 @@
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>listproduct</servlet-name>
+        <servlet-class>controller.product.listproduct</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>listproduct</servlet-name>
+        <url-pattern>/listproduct</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
