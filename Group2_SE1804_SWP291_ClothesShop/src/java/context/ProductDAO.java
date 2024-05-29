@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import model.Brand;
 import model.Category;
 import model.Gender;
@@ -78,10 +79,7 @@ public class ProductDAO extends DBContext {
 
     public void addProduct(Product product) {
         try {
-            String sql = """
-            INSERT INTO product (name, quantity, price, describe, img, releaseDate, cid, bid, gid, size) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """;
+            String sql = "INSERT INTO product (name, quantity, price, describe, img, releaseDate, cid, bid, gid, size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, product.getName());
             stm.setInt(2, product.getQuantity());
@@ -93,15 +91,85 @@ public class ProductDAO extends DBContext {
             stm.setInt(8, product.getBrand().getBid());
             stm.setInt(9, product.getGender().getGid());
             stm.setString(10, product.getSize());
-
             stm.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public List<Category> getAllCategories() {
+        List<Category> categories = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM category";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("cid");
+                String name = rs.getString("name");
+                categories.add(new Category(id, name));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+
+    public List<Brand> getAllBrands() {
+        List<Brand> brands = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM brand";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("bid");
+                String name = rs.getString("name");
+                brands.add(new Brand(id, name));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return brands;
+    }
+
+    public List<Gender> getAllGenders() {
+        List<Gender> genders = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM gender";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("gid");
+                String description = rs.getString("description");
+                genders.add(new Gender(id, description));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return genders;
+    }
+
+    private Product extractProduct(ResultSet rs) throws Exception {
+        int pid = rs.getInt("pid");
+        String name = rs.getString("name");
+        int quantity = rs.getInt("quantity");
+        double price = rs.getDouble("price");
+        String describe = rs.getString("describe");
+        String img = rs.getString("img");
+        Date releaseDate = rs.getDate("releaseDate");
+        int categoryId = rs.getInt("cid");
+        int brandId = rs.getInt("bid");
+        int genderId = rs.getInt("gid");
+        String size = rs.getString("size");
+
+        Category category = getCategoryById(categoryId);
+        Brand brand = getBrandById(brandId);
+        Gender gender = getGenderById(genderId);
+
+        return new Product(pid, name, quantity, price, describe, img, releaseDate, category, brand, gender, size);
+    }
+
     // Method to get Category by ID
-    private Category getCategoryById(int id) {
+    public Category getCategoryById(int id) {
         Category category = null;
         try {
             String sql = "SELECT * FROM category WHERE cid = ?";
@@ -142,7 +210,7 @@ public class ProductDAO extends DBContext {
     }
 
     // Method to get Brand by ID
-    private Brand getBrandById(int id) {
+    public Brand getBrandById(int id) {
         Brand brand = null;
         try {
             String sql = "SELECT * FROM brand WHERE bid = ?";
@@ -160,7 +228,7 @@ public class ProductDAO extends DBContext {
     }
 
     // Method to get Gender by ID
-    private Gender getGenderById(int id) {
+    public Gender getGenderById(int id) {
         Gender gender = null;
         try {
             String sql = "SELECT * FROM gender WHERE gid = ?";
@@ -175,6 +243,22 @@ public class ProductDAO extends DBContext {
             e.printStackTrace();
         }
         return gender;
+    }
+
+    public Product getProductById(int pid) {
+        Product product = null;
+        try {
+            String sql = "SELECT * FROM product WHERE pid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, pid);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                product = extractProduct(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return product;
     }
 
     public static void main(String[] args) {

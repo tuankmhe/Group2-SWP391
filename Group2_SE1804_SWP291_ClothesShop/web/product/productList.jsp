@@ -15,7 +15,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Product Management</h1>
-        <a href="addProduct.jsp" class="btn btn-success">Add New Product</a>
+        <a href="addproduct" class="btn btn-success">Add New Product</a>
 
         <!-- Search Form -->
         <form method="get" action="listproduct">
@@ -45,7 +45,7 @@
                     <c:forEach var="product" items="${products}">
                         <tr>
                             <td>${product.pid}</td>
-                            <td>${product.name}</td>
+                            <td><a href="productdetail?pid=${product.pid}">${product.name}</a></td>
                             <td>${product.quantity}</td>
                             <td>$${product.price}</td>
                             <td>${product.category.name}</td>

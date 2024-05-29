@@ -12,6 +12,14 @@
         <servlet-name>AddProductServlet</servlet-name>
         <servlet-class>controller.product.AddProductServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddProduct</servlet-name>
+        <servlet-class>controller.product.AddProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <servlet-class>controller.product.ProductDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddProductServlet</servlet-name>
         <url-pattern>/addproduct</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>newsDetail</servlet-name>
         <url-pattern>/newsDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProduct</servlet-name>
+        <url-pattern>/AddProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <url-pattern>/productdetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
